@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const externalUrl = "http://menurecommendation.hdbrd0atezbrd6eh.eastus.azurecontainer.io/"
+// const externalUrl = "http://menurecommendation.hdbrd0atezbrd6eh.eastus.azurecontainer.io/"
+const externalUrl = "https://menurecommend.azurewebsites.net/"
 
 export const getTokenExternal = async (data: any) => {
     try {
@@ -23,11 +24,11 @@ export const getTokenExternal = async (data: any) => {
 export const addUserExternal = async (data: any, token: string) => {
 
     try {
-        const response = await axios.post(`${externalUrl}add_user?id_user=${data.id_user}&nama_user=${data.nama_user}&jenis_kelamin=${data.jenis_kelamin}&umur_user=${data.umur_user}&target_kalori=${data.target_kalori}`, {
+        const response = await axios.post(`${externalUrl}add_user?id_user=${data.id_user}&nama_user=${data.nama_user}&jenis_kelamin=${data.jenis_kelamin}&umur_user=${data.umur_user}&target_kalori=${data.target_kalori}`, {}, {
             headers: {
+                Authorization: 'Bearer ' + token,
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
-              },
+            },
         });
         // console.log("ini berhasil ayey");
         return response.data;

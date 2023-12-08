@@ -13,7 +13,8 @@ export default function ExternalModal() {
   const [age, setAge] = useState<string>("");
   const [calorie, setCalorie] = useState<string>("");
   const [dataDiet, setDataDiet] = useState<Diet>({ nama_menu: "", kalori: "" });
-  const [count, setCount] = useState<number>(1200);
+  const [submited, setSubmited] = useState<boolean>(false);
+//   const [count, setCount] = useState<number>(1200);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -22,7 +23,7 @@ export default function ExternalModal() {
           const newToken = tokenResponse;
         //   setCustomerId(newCustomer);
 
-          console.log(newToken);
+        //   console.log(newToken);
           if (newToken) {
             await handleAddUser(e, newToken);
           } else {
@@ -54,19 +55,20 @@ export default function ExternalModal() {
     const handleAddUser = async (e: any, token: string) => {
         e.preventDefault();
         try {
+            const randCount = Math.floor(Math.random() * 100000) + 100000;
           const createOrderRecord: any = await addUserExternal({
-            "id_user": count,
+            "id_user": randCount,
             "nama_user": name,
             "jenis_kelamin": gender,
             "umur_user": age,
             "target_kalori": calorie,
           }, token);
           
-          const DietRecord: any = await getRecommendationExternal(count, token);
+          const DietRecord: any = await getRecommendationExternal(randCount, token);
 
           let randIndex;
           let randomDiet;
-          if (DietRecord.length() > 0) {
+          if (DietRecord.length > 0) {
             randIndex = Math.floor(Math.random() * DietRecord.length);
             if(randIndex) {
                 randomDiet = DietRecord[randIndex];
@@ -80,7 +82,7 @@ export default function ExternalModal() {
             }
 
           toastSuccess("Get Diet Recommendation Successfully!");
-          setCount(count+1);
+          setSubmited(true);
         } catch (error) {
           console.error('Error createOrder:', error);
         }
@@ -89,6 +91,7 @@ export default function ExternalModal() {
     const handleModalClose = () => {
     // Clear the data when the modal is closed
         setDataDiet({ nama_menu: "", kalori: "" });
+        setSubmited(false);
     };
 
     return (
@@ -171,9 +174,13 @@ export default function ExternalModal() {
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancel
                 </Button>
+                {submited ?
+                    <></>
+                : 
                 <Button color="secondary" type="submit">
-                  Submit
+                    Submit
                 </Button>
+                }
               </ModalFooter>
             </form>
             </>
